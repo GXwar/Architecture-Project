@@ -140,7 +140,9 @@ public class UserInterfaceController implements Controller {
                     StepInformation.setText("Program1 has been successfully loaded");
                     loadStatus = true;
                     //put the beginning address of a program into PC.
-                    CPU.getInstance().getPC().setContent("000001111110");
+                    CPU.getInstance().getPC().setContent("000010000000");
+                    CPU.getInstance().getX1().setContent("0000000001000000");
+                    CPU.getInstance().getX2().setContent("0000000010101010");
                     simulator.start();
 
                 }catch (IOException e){
@@ -182,7 +184,9 @@ public class UserInterfaceController implements Controller {
                     
                     loadStatus = true;
                     //put the beginning address of a program into PC.
-                    cpu.getPC().setContent("000001000000");
+                    cpu.getPC().setContent("000001000010");
+                    cpu.getX1().setContent("0000000001000000");
+                    cpu.getX2().setContent("0000000001100000");
                     if(simulator.getState() == Thread.State.NEW) {
                     		simulator.start();
                     }else {
@@ -246,17 +250,6 @@ public class UserInterfaceController implements Controller {
     		}
     }
     
-//    Get content from Device "printer"
-    public static void setP2Result(String printerContent) {
-    		if(open && programNumber == 2) {
-			if(p2SentenceNumber == -1) {
-				p2SentenceNumber = Integer.valueOf(printerContent, 2);
-			}else if(p2WordNumber == -1) {
-				p2WordNumber = Integer.valueOf(printerContent, 2);
-			}
-	    	}
-    }
-    
 //	Get step information
     public static void setStepInformation(String information) {
     		stepInformation = information;
@@ -267,6 +260,9 @@ public class UserInterfaceController implements Controller {
     }
 
     public void Run() {
+        if(!core.IOmemory.getInstance().getContent("00001").equals("0000000000000000")){
+            Printer.setText("Result: "+ core.IOmemory.getInstance().getContent("00001"));
+        }
     		if(terminate) {
     			Platform.exit();
     			System.exit(0);
